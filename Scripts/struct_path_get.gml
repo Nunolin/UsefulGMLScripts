@@ -1,5 +1,5 @@
 /// @desc Gets a nested value from a struct using a dot path. Returns undefined if any intermediate path segment doesn't exist, preventing crashes.
-/// @arg {Struct} struct The root struct/object to start traversing from
+/// @arg {Struct} struct The root struct to start traversing from
 /// @arg {string} string_path Dot-separated path string (e.g., "system.shop.buy")
 function struct_path_get(struct, string_path) {
 	var parts = string_split(string_path, ".")

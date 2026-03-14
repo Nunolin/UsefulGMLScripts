@@ -1,6 +1,6 @@
-/// @desc Creates a 2D vector with x and y components.
-/// @param {Real} x The x component of the vector
-/// @param {Real} y The y component of the vector
+/// @desc Creates a vector with x and y components.
+/// @param {Real} x
+/// @param {Real} y
 function vec2(x, y) constructor {
 	self.x = x
 	self.y = y
@@ -11,6 +11,10 @@ function vec2(x, y) constructor {
 	
 	static mult = function(magnitude) {
 		return new vec2(x*magnitude, y*magnitude)
+	}
+
+	static equals = function(vector) {
+		return x == vector.x && y == vector.y
 	}
 }
 
