@@ -1,40 +1,37 @@
-function state_machine(starting_state) constructor {
-	owner = other
+function state_machine(starting_state = "null", _id = other.id) constructor {
+	owner = _id
 	state = starting_state
-	states = {}
-	
-	static run = function(state_function) {
-		var curr_state = struct_get(states, state)
-		
-		if	(is_undefined(curr_state)) {
-			show_debug_message($"State {state} doesn't exist")
-			return self
-		}
-		
-		var fun = struct_get(curr_state, state_function)
-		
-		if (is_undefined(fun)) {
-			show_debug_message($"Function {state_function} of state {state} doesn't exist")
-			return self
-		}
-		
-		method_call(fun)
-		
-		return self
+	states = {
+		null: new fsm_state({}, self)
 	}
 	
-	static change = function(new_state) {
+	static run = function(function_name) {
+		var current_state = struct_get(states, state)		
+		var fun = struct_get(current_state, function_name)
+		
+		if (is_undefined(fun)) {
+			show_debug_message($"Function {function_name} of state {state} doesn't exist")
+			return
+		}
+		
+		fun()
+	}
+	
+	staatic change = function(new_state) {
+		if (is_undefined(struct_get(states, new_state))) {
+			show_debug_message($"State {new_state} doesn't exist")
+			return
+		}
+
 		run("leave")
 		
 		state = new_state
 		
 		run("enter")
-		
-		return self
 	}
 	
 	static add = function(new_state, state_struct) {
-		struct_set(self.states, new_state, new fsm_state(state_struct))
+		struct_set(states, new_state, new fsm_state(state_struct, self))
 		
 		if (new_state == state) run("enter")
 		
@@ -42,10 +39,12 @@ function state_machine(starting_state) constructor {
 	}
 }
 
-function fsm_state(struct) constructor {
-	fsm = other
-	static enter = function(){}
-	static leave = function(){}
+function fsm_state(struct, _fsm) constructor {
+	fsm = _fsm
+
+	static NOOP = function(){}
+	enter = NOOP
+	leave = NOOP
 	
 	var names = struct_get_names(struct)
 	var n = array_length(names)
